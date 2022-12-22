@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "build-extension": "npm run build && cp manifest.json dist/"
+    "build-extension": "npm run build && cp manifest.json dist/ && cp placeholder.png dist/"
   },
   "dependencies": {
     "react": "^18.2.0",

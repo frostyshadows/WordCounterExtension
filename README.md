@@ -1,4 +1,6 @@
-# WordCounterExtension
+# Wordy
+
+Chrome extension for tracking word count and staying on top of writing goals.
 
 ## Setup
 - `npm run dev` to run locally

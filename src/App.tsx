@@ -6,10 +6,8 @@ function App() {
 
   return (
     <div className="p-8">
-      <div>
-        <WordCountForm />
-        <WordCountProgressBar {...dummyProgressProps} />
-      </div>
+      <WordCountForm />
+      <WordCountProgressBar {...dummyProgressProps} />
     </div>
   );
 }

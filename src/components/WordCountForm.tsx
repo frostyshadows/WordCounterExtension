@@ -15,7 +15,7 @@ export default function WordCountForm() {
   }
 
   return (
-    <div>
+    <div className="flex flex-1 gap-1">
       <input
         className="border-2"
         type="text"

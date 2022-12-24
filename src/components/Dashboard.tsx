@@ -9,7 +9,7 @@ export interface Props {
   session: Session;
 }
 
-export default function Dashboard({ session }: Props) {
+export default function ExtensionDashboard({ session }: Props) {
   useEffect(() => {
     createUser();
   }, []);

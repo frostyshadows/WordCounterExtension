@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import Auth from "./components/Auth";
-import Dashboard from "./components/Dashboard";
+import ExtensionDashboard from "./components/Dashboard";
 import { Session } from "@supabase/supabase-js";
 
 export default function App() {
@@ -17,5 +17,5 @@ export default function App() {
     });
   }, []);
 
-  return <div>{!session ? <Auth /> : <Dashboard session={session} />}</div>;
+  return <div>{!session ? <Auth /> : <ExtensionDashboard session={session} />}</div>;
 }

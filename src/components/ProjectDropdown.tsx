@@ -15,6 +15,8 @@ export default function ProjectDropdown() {
 
     if (data) {
       setProjects(projects);
+    } else if (error) {
+      alert(error.message);
     }
   };
 

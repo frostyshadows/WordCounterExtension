@@ -1,17 +1,21 @@
-import ProjectDropdown from "./components/ProjectDropdown";
-import WordCountForm from "./components/WordCountForm";
-import WordCountProgressBar from "./components/WordCountProgressBar";
+import { useEffect, useState } from "react";
+import { supabase } from "./supabase";
+import Auth from "./components/Auth";
+import Dashboard from "./components/Dashboard";
+import { Session } from "@supabase/supabase-js";
 
-function App() {
-  const dummyProgressProps = { current: 300, target: 500, period: "today" };
+export default function App() {
+  const [session, setSession] = useState<Session | null>(null);
 
-  return (
-    <div className="p-8 flex flex-col gap-1 items-start">
-      <ProjectDropdown />
-      <WordCountForm />
-      <WordCountProgressBar {...dummyProgressProps} />
-    </div>
-  );
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
+  return <div>{!session ? <Auth /> : <Dashboard session={session} />}</div>;
 }
-
-export default App;

@@ -4,6 +4,7 @@ import WordCountForm from "./WordCountForm";
 import WordCountProgressBar from "./WordCountProgressBar";
 import { useEffect } from "react";
 import { supabase } from "../supabase";
+import { Button } from "@material-tailwind/react";
 
 export interface Props {
   session: Session;
@@ -23,12 +24,17 @@ export default function ExtensionDashboard({ session }: Props) {
     }
   };
 
+  function handleLogout() {
+    supabase.auth.signOut();
+  }
+
   const dummyProgressProps = { current: 300, target: 500, period: "today" };
   return (
     <div className="p-8 flex flex-col gap-1 items-start">
       <ProjectDropdown />
       <WordCountForm />
       <WordCountProgressBar {...dummyProgressProps} />
+      <Button onClick={handleLogout}>Log out</Button>
     </div>
   );
 }

@@ -12,7 +12,10 @@ import { CREATE_PROJECT_ROUTE } from "../App";
 import { getProjects } from "../storage";
 
 export default function ProjectDropdown() {
-  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [projects, setProjects] = useState<ProjectType[]>([
+    new NoSelectedProject(),
+    new CreateNewProject(),
+  ]);
   const navigate = useNavigate();
 
   useEffect(() => {

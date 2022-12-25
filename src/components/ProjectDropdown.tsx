@@ -1,31 +1,37 @@
 import Dropdown from "./Dropdown";
 import { useEffect, useState } from "react";
-import { CreateNewProject, NoSelectedProject, Project, ProjectType } from "../ProjectType";
+import { CreateNewProject, NoSelectedProject, ProjectType } from "../ProjectType";
+import { getProjects } from "../storage";
 
 export default function ProjectDropdown() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectType[]>([new CreateNewProject()]);
 
   useEffect(() => {
-    getProjects();
+    loadProjects();
   });
 
-  function getProjects(): ProjectType[] {
-    return [];
-  }
+  const loadProjects = async () => {
+    const projects = (await getProjects()) as ProjectType[];
+    projects.push(new CreateNewProject());
+    setProjects(projects);
+  };
 
   function getProjectName(project: ProjectType): string {
-    return project.title;
+    if (typeof project === "string") {
+      return project;
+    } else if (project as NoSelectedProject) {
+      return project.title;
+    } else if (project as CreateNewProject) {
+      return project.title;
+    }
+    return "";
   }
 
   function handleProjectSelection(project: ProjectType) {
-    if ((project as Project).title) {
+    if (project as string) {
       console.log("project is project");
-      {
-      }
     } else if (project as NoSelectedProject) {
       console.log("project is no selected");
-      {
-      }
     } else if (project as CreateNewProject) {
       console.log("project is create new");
     } else {
@@ -33,13 +39,9 @@ export default function ProjectDropdown() {
     }
   }
 
-  const projectOptions = projects as ProjectType[];
-  projectOptions.push(new NoSelectedProject());
-  projectOptions.push(new CreateNewProject());
-
   return (
     <Dropdown<ProjectType>
-      options={projectOptions}
+      options={projects}
       optionName={(project) => getProjectName(project)}
       handleSelection={(project) => handleProjectSelection(project)}
     />

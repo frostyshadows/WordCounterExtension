@@ -1,45 +1,22 @@
 import { useState } from "react";
 import { supabase } from "../supabase";
 
-enum State {
-  EnterEmail,
-  Loading,
-  EnterOTP,
-}
-
 export default function Auth() {
-  const [state, setState] = useState(State.EnterEmail);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [otp, setOTP] = useState("");
-
-  const handleRequestPassword = async (e: any) => {
-    e.preventDefault();
-
-    try {
-      setState(State.Loading);
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      if (error) throw error;
-      setState(State.EnterOTP);
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-      setState(State.EnterEmail);
-    }
-  };
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
     try {
-      setState(State.Loading);
-      const { error } = await supabase.auth.verifyOtp({
-        email: email,
-        token: otp,
-        type: "magiclink",
-      });
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOtp({ email });
       if (error) throw error;
+      alert("Check your email for the login link!");
     } catch (error: any) {
       alert(error.error_description || error.message);
-      setState(State.EnterEmail);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,10 +25,10 @@ export default function Auth() {
       <div className="col-6 form-widget" aria-live="polite">
         <h1 className="header">Word Counter</h1>
         <p className="description">Sign in via magic link with your email below</p>
-        {state === State.Loading ? (
-          "Sending one-time password..."
-        ) : state === State.EnterEmail ? (
-          <form onSubmit={handleRequestPassword}>
+        {loading ? (
+          "Sending magic link..."
+        ) : (
+          <form onSubmit={handleLogin}>
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -62,22 +39,7 @@ export default function Auth() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <button className="button block" aria-live="polite">
-              Send one-time code
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleLogin}>
-            <label htmlFor="otp">Password</label>
-            <input
-              id="otp"
-              className="inputField"
-              type="text"
-              placeholder="Password"
-              value={otp}
-              onChange={(e) => setOTP(e.target.value)}
-            />
-            <button className="button block" aria-live="polite">
-              Login
+              Send magic link
             </button>
           </form>
         )}

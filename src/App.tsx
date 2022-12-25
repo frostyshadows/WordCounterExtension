@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
-import { supabase } from "./supabase";
-import Auth from "./components/Auth";
-import ExtensionDashboard from "./components/Dashboard";
-import { Session } from "@supabase/supabase-js";
+import Dropdown from "./components/Dropdown";
+import WordCountForm from "./components/WordCountForm";
+import WordCountProgressBar from "./components/WordCountProgressBar";
 
-export default function App() {
-  const [session, setSession] = useState<Session | null>(null);
+function App() {
+  const dummyDropdownProps = {
+    options: ["Viridian", "Dreams of an Alien God"],
+    optionName: (project: string) => project,
+    handleSelection: (project: string) => {},
+  };
+  const dummyProgressProps = { current: 300, target: 500, period: "today" };
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
-
-  return <div>{!session ? <Auth /> : <ExtensionDashboard session={session} />}</div>;
+  return (
+    <div className="p-8 flex flex-col gap-1 items-start">
+      <Dropdown<string> {...dummyDropdownProps} />
+      <WordCountForm />
+      <WordCountProgressBar {...dummyProgressProps} />
+    </div>
+  );
 }
+
+export default App;

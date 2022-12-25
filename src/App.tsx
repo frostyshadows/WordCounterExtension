@@ -1,17 +1,17 @@
-import ProjectDropdown from "./components/ProjectDropdown";
-import WordCountForm from "./components/WordCountForm";
-import WordCountProgressBar from "./components/WordCountProgressBar";
+import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
+import ExtensionDashboardPage from "./pages/ExtensionDashboardPage";
+import ProjectCreationPage from "./pages/ProjectCreationPage";
 
-function App() {
-  const dummyProgressProps = { current: 300, target: 500, period: "today" };
+export const DASHBOARD_ROUTE = "/";
+export const CREATE_PROJECT_ROUTE = "/create_project";
 
+export default function App() {
   return (
-    <div className="p-8 flex flex-col gap-1 items-start">
-      <ProjectDropdown />
-      <WordCountForm />
-      <WordCountProgressBar {...dummyProgressProps} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path={DASHBOARD_ROUTE} element={<ExtensionDashboardPage />} />
+        <Route path={CREATE_PROJECT_ROUTE} element={<ProjectCreationPage />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;

@@ -1,10 +1,19 @@
 import Dropdown from "./Dropdown";
 import { useEffect, useState } from "react";
-import { CreateNewProject, NoSelectedProject, ProjectType } from "../ProjectType";
+import { useNavigate } from "react-router-dom";
+import {
+  CreateNewProject,
+  NoSelectedProject,
+  ProjectType,
+  PROJECT_TITLE_CREATE_NEW,
+  PROJECT_TITLE_NONE,
+} from "../ProjectType";
+import { CREATE_PROJECT_ROUTE } from "../App";
 import { getProjects } from "../storage";
 
 export default function ProjectDropdown() {
-  const [projects, setProjects] = useState<ProjectType[]>([new CreateNewProject()]);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadProjects();
@@ -27,15 +36,18 @@ export default function ProjectDropdown() {
     return "";
   }
 
-  function handleProjectSelection(project: ProjectType) {
-    if (project as string) {
-      console.log("project is project");
-    } else if (project as NoSelectedProject) {
-      console.log("project is no selected");
-    } else if (project as CreateNewProject) {
-      console.log("project is create new");
-    } else {
-      console.log("project is unexpected");
+  function handleProjectSelection(projectTitle: string) {
+    switch (projectTitle) {
+      case PROJECT_TITLE_NONE: {
+        console.log("project is none");
+      }
+      case PROJECT_TITLE_CREATE_NEW: {
+        console.log("project is create new");
+        navigate(CREATE_PROJECT_ROUTE);
+      }
+      default: {
+        console.log("project is project");
+      }
     }
   }
 
@@ -43,7 +55,7 @@ export default function ProjectDropdown() {
     <Dropdown<ProjectType>
       options={projects}
       optionName={(project) => getProjectName(project)}
-      handleSelection={(project) => handleProjectSelection(project)}
+      handleSelection={(projectTitle) => handleProjectSelection(projectTitle)}
     />
   );
 }

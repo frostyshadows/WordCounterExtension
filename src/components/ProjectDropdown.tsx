@@ -4,27 +4,39 @@ import { useNavigate } from "react-router-dom";
 import {
   CreateNewProject,
   NoSelectedProject,
-  Project,
   ProjectType,
   PROJECT_TITLE_CREATE_NEW,
   PROJECT_TITLE_NONE,
 } from "../ProjectType";
 import { CREATE_PROJECT_ROUTE } from "../App";
+import { getProjects } from "../storage";
 
 export default function ProjectDropdown() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectType[]>([
+    new NoSelectedProject(),
+    new CreateNewProject(),
+  ]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getProjects();
+    loadProjects();
   });
 
-  function getProjects(): ProjectType[] {
-    return [];
-  }
+  const loadProjects = async () => {
+    const projects = (await getProjects()) as ProjectType[];
+    projects.push(new CreateNewProject());
+    setProjects(projects);
+  };
 
   function getProjectName(project: ProjectType): string {
-    return project.title;
+    if (typeof project === "string") {
+      return project;
+    } else if (project as NoSelectedProject) {
+      return project.title;
+    } else if (project as CreateNewProject) {
+      return project.title;
+    }
+    return "";
   }
 
   function handleProjectSelection(projectTitle: string) {
@@ -42,13 +54,9 @@ export default function ProjectDropdown() {
     }
   }
 
-  const projectOptions = projects as ProjectType[];
-  projectOptions.push(new NoSelectedProject());
-  projectOptions.push(new CreateNewProject());
-
   return (
     <Dropdown<ProjectType>
-      options={projectOptions}
+      options={projects}
       optionName={(project) => getProjectName(project)}
       handleSelection={(projectTitle) => handleProjectSelection(projectTitle)}
     />

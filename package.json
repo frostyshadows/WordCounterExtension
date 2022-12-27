@@ -11,7 +11,6 @@
     },
     "dependencies": {
         "@material-tailwind/html": "^1.2.3",
-        "chrome-types": "^0.1.155",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.6.1"

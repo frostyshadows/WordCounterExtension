@@ -1,9 +1,21 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { Button } from "@material-tailwind/react";
+import { getPersistedProjects, setPersistedProjects } from "../storage";
+import { Project } from "../models";
 
 export default function ProjectCreationPage() {
-  let [title, setTitle] = useState("");
-  let [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    const projects = await getPersistedProjects();
+    setProjects(projects);
+  };
 
   function handleTitleChange(event: ChangeEvent<HTMLInputElement>) {
     setTitle((event.target as HTMLInputElement).value);
@@ -13,8 +25,25 @@ export default function ProjectCreationPage() {
     setDescription((event.target as HTMLInputElement).value);
   }
 
-  function handleCreate() {
-    alert("A project was submitted");
+  async function handleCreate() {
+    const projectDefaults: Project = {
+      title: "",
+      description: "",
+      created_at: new Date(),
+      goal_count: 0,
+      goal_period: "daily",
+      goal_total: 500,
+      status: "todo",
+      start_time: new Date(),
+      end_time: new Date(new Date().getDate() + 7),
+    };
+    const newProject: Project = {
+      ...projectDefaults,
+      title: title,
+      description: description,
+    };
+    projects.push(newProject);
+    setPersistedProjects(projects);
   }
 
   return (

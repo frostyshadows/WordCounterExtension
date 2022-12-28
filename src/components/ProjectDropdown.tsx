@@ -1,23 +1,17 @@
 import Dropdown from "./Dropdown";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Project,
-  CreateNewProject,
-  NoSelectedProject,
-  ProjectType,
-  PROJECT_TITLE_CREATE_NEW,
-  PROJECT_TITLE_NONE,
-} from "../models";
-import { CREATE_PROJECT_ROUTE } from "../App";
+import { CreateNewProject, NoSelectedProject, ProjectType } from "../models/projectModels";
 import { getPersistedProjects } from "../storage";
 
-export default function ProjectDropdown() {
+interface Props {
+  onProjectSelected: (projectTitle: string) => void;
+}
+
+export default function ProjectDropdown({ onProjectSelected }: Props) {
   const [projects, setProjects] = useState<ProjectType[]>([
     new NoSelectedProject(),
     new CreateNewProject(),
   ]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadProjects();
@@ -30,39 +24,18 @@ export default function ProjectDropdown() {
     }
     projects.push(new CreateNewProject());
     setProjects(projects);
+    onProjectSelected(projects[0].title);
   };
 
   function getProjectName(project: ProjectType): string {
-    if (project as Project) {
-      return project.title;
-    } else if (project as NoSelectedProject) {
-      return project.title;
-    } else if (project as CreateNewProject) {
-      return project.title;
-    }
-    return "";
-  }
-
-  function handleProjectSelection(projectTitle: string) {
-    switch (projectTitle) {
-      case PROJECT_TITLE_NONE: {
-        console.log("project is none");
-      }
-      case PROJECT_TITLE_CREATE_NEW: {
-        console.log("project is create new");
-        navigate(CREATE_PROJECT_ROUTE);
-      }
-      default: {
-        console.log("project is project");
-      }
-    }
+    return project.title;
   }
 
   return (
     <Dropdown<ProjectType>
       options={projects}
       optionName={(project) => getProjectName(project)}
-      handleSelection={(projectTitle) => handleProjectSelection(projectTitle)}
+      handleSelection={(projectTitle) => onProjectSelected(projectTitle)}
     />
   );
 }

@@ -46,9 +46,8 @@ export default function ProjectCreationPage() {
       description: description,
     };
     projects.push(newProject);
-    setPersistedProjects(projects).then(() => {
-      navigate(-1);
-    });
+    await setPersistedProjects(projects);
+    navigate(-1);
   }
 
   return (

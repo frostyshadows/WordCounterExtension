@@ -1,7 +1,8 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import { Button } from "@material-tailwind/react";
 import { getPersistedProjects, setPersistedProjects } from "../storage";
-import { Project } from "../models";
+import { Project } from "../models/projectModels";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectCreationPage() {
   const [title, setTitle] = useState("");
@@ -11,6 +12,8 @@ export default function ProjectCreationPage() {
   useEffect(() => {
     loadProjects();
   }, []);
+
+  const navigate = useNavigate();
 
   const loadProjects = async () => {
     const projects = await getPersistedProjects();
@@ -43,7 +46,8 @@ export default function ProjectCreationPage() {
       description: description,
     };
     projects.push(newProject);
-    setPersistedProjects(projects);
+    await setPersistedProjects(projects);
+    navigate(-1);
   }
 
   return (

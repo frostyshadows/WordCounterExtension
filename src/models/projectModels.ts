@@ -20,12 +20,6 @@ export interface Project {
   end_time?: Date;
 }
 
-export interface Entry {
-  project: string;
-  timestamp: Date;
-  count: number;
-}
-
 export class NoSelectedProject {
   title: string = PROJECT_TITLE_NONE;
 }

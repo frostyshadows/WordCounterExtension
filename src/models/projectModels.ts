@@ -2,6 +2,8 @@ export const PROJECT_TITLE_NONE = "None";
 export const PROJECT_TITLE_CREATE_NEW = "Create new...";
 
 export type Period = "daily" | "weekly" | "monthly" | "yearly";
+export const periodOptions: Period[] = ["daily", "weekly", "monthly", "yearly"];
+
 export type Status = "todo" | "inprogress" | "complete";
 
 export interface Titleable {

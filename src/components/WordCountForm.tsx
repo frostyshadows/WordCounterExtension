@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { Button } from "@material-tailwind/react";
-import { addPersistedEntry } from "../storage";
+import { addPersistedEntry } from "../storage/entryStorage";
 
 interface Props {
   projectTitle: string;

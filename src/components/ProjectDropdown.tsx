@@ -1,7 +1,7 @@
 import Dropdown from "./Dropdown";
 import { useEffect, useState } from "react";
 import { CreateNewProject, NoSelectedProject, ProjectType } from "../models/projectModels";
-import { getPersistedProjects } from "../storage";
+import { getPersistedProjects } from "../storage/projectStorage";
 
 interface Props {
   onProjectSelected: (projectTitle: string) => void;

@@ -1,8 +1,8 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import { Button } from "@material-tailwind/react";
-import { getPersistedProjects, setPersistedProjects } from "../storage";
 import { Project } from "../models/projectModels";
 import { useNavigate } from "react-router-dom";
+import { getPersistedProjects, setPersistedProjects } from "../storage/projectStorage";
 
 export default function ProjectCreationPage() {
   const [title, setTitle] = useState("");

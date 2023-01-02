@@ -14,6 +14,7 @@ export default function ExtensionDashboardPage() {
     goal_period: "daily",
     period_start: new Date(),
   });
+  const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
 
   useEffect(() => {
     loadUserGoal();
@@ -23,7 +24,6 @@ export default function ExtensionDashboardPage() {
     const goal = await getPersistedUserGoal();
     setUserGoal(goal);
   };
-  const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
 
   const navigate = useNavigate();
 
@@ -37,23 +37,21 @@ export default function ExtensionDashboardPage() {
 
   const projectDropdownProps = { onProjectSelected: handleProjectSelection };
 
-  let progressBar;
-  if (userGoal !== null) {
-    const progressProps = {
-      current: 100,
-      target: userGoal.goal_count,
-      period: userGoal.goal_period,
-    };
-    progressBar = <WordCountProgressBar {...progressProps} />;
-  } else {
+  const progressProps = {
+    current: 100,
+    target: userGoal?.goal_count ?? 0,
+    period: userGoal?.goal_period ?? "daily",
+  };
+
+  if (userGoal === null) {
     navigate(SET_GOAL_ROUTE);
-    progressBar = null;
   }
+
   return (
     <div className="h-100 w-150 p-8 flex flex-col gap-1 items-start">
       <ProjectDropdown {...projectDropdownProps} />
       <WordCountForm {...{ projectTitle }} />
-      {progressBar}
+      {userGoal !== null ? <WordCountProgressBar {...progressProps} /> : null}
     </div>
   );
 }

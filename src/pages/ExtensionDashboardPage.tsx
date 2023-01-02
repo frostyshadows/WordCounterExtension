@@ -7,6 +7,8 @@ import { CREATE_PROJECT_ROUTE, SET_GOAL_ROUTE } from "../App";
 import { useEffect, useState } from "react";
 import { UserGoal } from "../models/userModels";
 import { getPersistedUserGoal } from "../storage/userGoalStorage";
+import { getPersistedEntries } from "../storage/entryStorage";
+import { Entry } from "../models/entryModels";
 
 export default function ExtensionDashboardPage() {
   const [userGoal, setUserGoal] = useState<UserGoal | null>({
@@ -14,16 +16,32 @@ export default function ExtensionDashboardPage() {
     goal_period: "daily",
     period_start: new Date(),
   });
+  const [currentEntries, setCurrentEntries] = useState<Entry[]>([]);
+  const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
 
   useEffect(() => {
     loadUserGoal();
+    loadEntries();
   }, []);
 
   const loadUserGoal = async () => {
     const goal = await getPersistedUserGoal();
     setUserGoal(goal);
   };
-  const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
+
+  const loadEntries = async () => {
+    const entries = await getPersistedEntries();
+    setCurrentEntries(
+      entries.filter((entry) => {
+        return (
+          projectTitle === entry.project &&
+          new Date().getDate() === entry.timestamp.getDate() &&
+          new Date().getMonth() === entry.timestamp.getMonth() &&
+          new Date().getFullYear() === entry.timestamp.getFullYear()
+        );
+      })
+    );
+  };
 
   const navigate = useNavigate();
 
@@ -37,23 +55,21 @@ export default function ExtensionDashboardPage() {
 
   const projectDropdownProps = { onProjectSelected: handleProjectSelection };
 
-  let progressBar;
-  if (userGoal !== null) {
-    const progressProps = {
-      current: 100,
-      target: userGoal.goal_count,
-      period: userGoal.goal_period,
-    };
-    progressBar = <WordCountProgressBar {...progressProps} />;
-  } else {
+  const progressProps = {
+    current: currentEntries.reduce((total, currentValue) => total + currentValue.count, 0),
+    target: userGoal?.goal_count ?? 0,
+    period: userGoal?.goal_period ?? "daily",
+  };
+
+  if (userGoal === null) {
     navigate(SET_GOAL_ROUTE);
-    progressBar = null;
   }
+
   return (
     <div className="h-100 w-150 p-8 flex flex-col gap-1 items-start">
       <ProjectDropdown {...projectDropdownProps} />
       <WordCountForm {...{ projectTitle }} />
-      {progressBar}
+      {userGoal !== null ? <WordCountProgressBar {...progressProps} /> : null}
     </div>
   );
 }

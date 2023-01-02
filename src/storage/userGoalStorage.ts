@@ -1,4 +1,4 @@
-import { Period } from "../models/projectModels";
+import { Period } from "../models/periodModels";
 import { UserGoal } from "../models/userModels";
 
 export async function getPersistedUserGoal(): Promise<UserGoal | null> {
@@ -9,7 +9,7 @@ export async function getPersistedUserGoal(): Promise<UserGoal | null> {
   const goalPeriod = goalPeriodResult.userGoalPeriod as Period;
 
   const goalPeriodStartResult = await chrome.storage.local.get("userGoalPeriodStart");
-  const goalPeriodStart = goalPeriodStartResult.userGoalPeriodStart as Date;
+  const goalPeriodStart = goalPeriodStartResult.userGoalPeriodStart;
 
   if (goalCount !== undefined && goalPeriod !== undefined && goalPeriodStart !== undefined) {
     return { goal_count: goalCount, goal_period: goalPeriod, period_start: goalPeriodStart };

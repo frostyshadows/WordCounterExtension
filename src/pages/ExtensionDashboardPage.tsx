@@ -7,22 +7,32 @@ import { CREATE_PROJECT_ROUTE, SET_GOAL_ROUTE } from "../App";
 import { useEffect, useState } from "react";
 import { UserGoal } from "../models/userModels";
 import { getPersistedUserGoal } from "../storage/userGoalStorage";
+import { getPersistedUserWordCount } from "../storage/entryStorage";
 
 export default function ExtensionDashboardPage() {
   const [userGoal, setUserGoal] = useState<UserGoal | null>({
     goal_count: 0,
     goal_period: "daily",
-    period_start: new Date(),
+    period_start: Date.now(),
   });
+  const [wordCount, setWordCount] = useState<number | null>(0);
   const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
 
   useEffect(() => {
-    loadUserGoal();
-  }, []);
+    loadDashboard();
+    chrome.storage.onChanged.addListener(() => {
+      loadDashboard();
+    });
+  }, [wordCount]);
 
-  const loadUserGoal = async () => {
+  const loadDashboard = async () => {
     const goal = await getPersistedUserGoal();
     setUserGoal(goal);
+    if (goal !== null) {
+      const count = await getPersistedUserWordCount(goal);
+      console.log("setting word count in dashboard: " + count);
+      setWordCount(count);
+    }
   };
 
   const navigate = useNavigate();
@@ -38,7 +48,7 @@ export default function ExtensionDashboardPage() {
   const projectDropdownProps = { onProjectSelected: handleProjectSelection };
 
   const progressProps = {
-    current: 100,
+    current: wordCount ?? 0,
     target: userGoal?.goal_count ?? 0,
     period: userGoal?.goal_period ?? "daily",
   };

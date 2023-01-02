@@ -1,7 +1,7 @@
 import { Button } from "@material-tailwind/react";
 import { useState, ChangeEvent } from "react";
 import Dropdown from "../components/Dropdown";
-import { Period, periodOptions } from "../models/projectModels";
+import { Period, periodOptions } from "../models/periodModels";
 import { setPersistedUserGoal } from "../storage/userGoalStorage";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,7 @@ export default function SetUserGoalPage() {
     await setPersistedUserGoal({
       goal_count: Number(count),
       goal_period: period,
-      period_start: new Date(),
+      period_start: Date.now(),
     });
     navigate(-1);
   }

@@ -16,8 +16,9 @@ export default function WordCountForm({ projectTitle }: Props) {
   }
 
   function handleSubmit() {
-    alert("A word count was submitted: " + count);
-    addPersistedEntry({ project: projectTitle, timestamp: new Date(), count: Number(count) });
+    console.log("A word count was submitted: " + count);
+    addPersistedEntry({ project: projectTitle, timestamp: Date.now(), count: Number(count) });
+    setCount("");
   }
 
   return (

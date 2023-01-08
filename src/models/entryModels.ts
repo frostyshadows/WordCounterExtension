@@ -1,5 +1,5 @@
 export interface Entry {
-  project: string;
-  timestamp: Date;
+  project: string; // "None" if no project selected
+  timestamp: number;
   count: number;
 }

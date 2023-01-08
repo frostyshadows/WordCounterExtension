@@ -1,7 +1,7 @@
-import { Period } from "./projectModels";
+import { Period } from "./periodModels";
 
 export interface UserGoal {
   goal_count: number;
   goal_period: Period;
-  period_start: Date;
+  period_start: number;
 }

@@ -1,4 +1,6 @@
 import { Entry } from "../models/entryModels";
+import { getPeriodMs } from "../models/periodModels";
+import { UserGoal } from "../models/userModels";
 
 export async function getPersistedEntries(): Promise<Entry[]> {
   const result = await chrome.storage.local.get("entries");
@@ -7,6 +9,23 @@ export async function getPersistedEntries(): Promise<Entry[]> {
   } else {
     return [];
   }
+}
+
+export async function getPersistedUserWordCount(userGoal: UserGoal): Promise<number> {
+  const entries = await getPersistedEntries();
+
+  const currentTime = Date.now();
+  const ellapsedMs = currentTime - userGoal.period_start;
+  const currentPeriodStart = ellapsedMs % getPeriodMs(userGoal.goal_period);
+
+  let wordCount = 0;
+  entries.forEach((entry) => {
+    const timeSinceEntry = currentTime - entry.timestamp;
+    if (timeSinceEntry < currentPeriodStart) {
+      wordCount += entry.count;
+    }
+  });
+  return wordCount;
 }
 
 export async function setPersistedEntries(entries: Entry[]) {

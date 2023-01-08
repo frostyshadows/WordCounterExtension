@@ -23,7 +23,7 @@ export default function ExtensionDashboardPage() {
     chrome.storage.onChanged.addListener(() => {
       loadDashboard();
     });
-  }, [wordCount]);
+  }, []);
 
   const loadDashboard = async () => {
     const goal = await getPersistedUserGoal();

@@ -15,15 +15,21 @@ export async function setPersistedProjects(projects: Project[]) {
   });
 }
 
-export async function showAddProject(): Promise<boolean> {
+export async function getShowAddProject(): Promise<boolean> {
   const projects = await getPersistedProjects();
-  const skipAddProjectResult = await chrome.storage.local.get("skipAddProject");
-  const skipAddProject = JSON.parse(skipAddProjectResult.skipAddProject);
-  return projects.length === 0 && JSON.parse(skipAddProject) === false;
+  if (projects.length > 0) {
+    return false;
+  }
+  const showAddProjectResult = await chrome.storage.local.get("showAddProject");
+  if (showAddProjectResult.showAddProject === undefined) {
+    return true;
+  }
+  const showAddProject = JSON.parse(showAddProjectResult.showAddProject);
+  return JSON.parse(showAddProject) === true;
 }
 
-export async function setSkipAddProject(skipAddProject: boolean) {
+export async function setShowAddProject(showAddProject: boolean) {
   await chrome.storage.local.set({
-    skipAddProject: JSON.stringify(skipAddProject),
+    showAddProject: JSON.stringify(showAddProject),
   });
 }

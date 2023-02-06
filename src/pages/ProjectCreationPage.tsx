@@ -2,7 +2,11 @@ import { useEffect, useState, ChangeEvent } from "react";
 import { Button } from "@material-tailwind/react";
 import { Project } from "../models/projectModels";
 import { useNavigate } from "react-router-dom";
-import { getPersistedProjects, setPersistedProjects } from "../storage/projectStorage";
+import {
+  getPersistedProjects,
+  setPersistedProjects,
+  setShowAddProject,
+} from "../storage/projectStorage";
 
 export default function ProjectCreationPage() {
   const [title, setTitle] = useState("");
@@ -47,6 +51,9 @@ export default function ProjectCreationPage() {
     };
     projects.push(newProject);
     await setPersistedProjects(projects);
+
+    await setShowAddProject(false);
+
     navigate(-1);
   }
 
@@ -62,7 +69,9 @@ export default function ProjectCreationPage() {
         value={description}
         onChange={handleDescriptionChange}
       />
-      <Button onClick={handleCreate}>Create</Button>
+      <Button disabled={title.length == 0} onClick={handleCreate}>
+        Create
+      </Button>
     </div>
   );
 }

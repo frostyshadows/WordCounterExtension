@@ -3,11 +3,12 @@ import WordCountForm from "../components/WordCountForm";
 import WordCountProgressBar from "../components/WordCountProgressBar";
 import { useNavigate } from "react-router-dom";
 import { PROJECT_TITLE_CREATE_NEW, PROJECT_TITLE_NONE } from "../models/projectModels";
-import { CREATE_PROJECT_ROUTE, SET_GOAL_ROUTE } from "../App";
+import { CREATE_PROJECT_ROUTE, SET_GOAL_ROUTE, WELCOME_ROUTE } from "../App";
 import { useEffect, useState } from "react";
 import { UserGoal } from "../models/userModels";
 import { getPersistedUserGoal } from "../storage/userGoalStorage";
 import { getPersistedUserWordCount } from "../storage/entryStorage";
+import { getShowAddProject } from "../storage/projectStorage";
 
 export default function ExtensionDashboardPage() {
   const [userGoal, setUserGoal] = useState<UserGoal | null>({
@@ -17,6 +18,7 @@ export default function ExtensionDashboardPage() {
   });
   const [wordCount, setWordCount] = useState<number | null>(0);
   const [projectTitle, setProjectTitle] = useState(PROJECT_TITLE_NONE);
+  const [showAddProject, setAddProject] = useState(false);
 
   useEffect(() => {
     loadDashboard();
@@ -26,6 +28,8 @@ export default function ExtensionDashboardPage() {
   }, []);
 
   const loadDashboard = async () => {
+    const show = await getShowAddProject();
+    setAddProject(show);
     const goal = await getPersistedUserGoal();
     setUserGoal(goal);
     if (goal !== null) {
@@ -53,7 +57,9 @@ export default function ExtensionDashboardPage() {
     period: userGoal?.goal_period ?? "daily",
   };
 
-  if (userGoal === null) {
+  if (showAddProject) {
+    navigate(WELCOME_ROUTE);
+  } else if (userGoal === null) {
     navigate(SET_GOAL_ROUTE);
   }
 

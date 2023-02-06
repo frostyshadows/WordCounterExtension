@@ -32,7 +32,7 @@ export default function SetUserGoalPage() {
   }
 
   return (
-    <div className="flex p-8 flex-col gap-1 items-start">
+    <div className="h-100 w-150 p-8 flex flex-col gap-1 items-start">
       <p>I want to write...</p>
       <div className="flex flex-row gap-1 items-start">
         <input className="border-2" type="text" value={count} onChange={handleCountChange} />
@@ -43,7 +43,9 @@ export default function SetUserGoalPage() {
         optionName={(period) => period}
         handleSelection={(period) => handlePeriodSelect(period)}
       />
-      <Button onClick={handleSubmit}>Submit</Button>
+      <Button disabled={count.length == 0} onClick={handleSubmit}>
+        Submit
+      </Button>
     </div>
   );
 }
